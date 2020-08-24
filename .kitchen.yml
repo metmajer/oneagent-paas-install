@@ -1,0 +1,40 @@
+---
+provisioner:
+  name: shell
+  data_path: .
+
+driver:
+  name: docker_cli
+
+verifier:
+  ruby_bindir: /usr/bin
+
+transport:
+  name: docker_cli
+
+platforms:
+- name: ubuntu
+  driver_config:
+    image: ubuntu:16.04
+    run_command:
+    - apt update && apt install -y sudo curl psmisc ruby unzip
+
+suites:
+- name: oneagent-default
+- name: oneagent-32
+- name: oneagent-64
+- name: oneagent-64-apache
+  driver_config:
+    image: httpd:2.2
+    run_command:
+    - apt update && apt install -y sudo curl psmisc ruby unzip
+- name: oneagent-64-java
+- name: oneagent-64-nginx
+- name: oneagent-64-nodejs
+- name: oneagent-64-php-apache
+  driver_config:
+    image: php:7-apache
+    run_command:
+    - apt update && apt install -y sudo curl psmisc ruby unzip
+    - echo "ServerName localhost" | tee /etc/apache2/conf-available/fqdn.conf
+    - a2enconf fqdn.conf
